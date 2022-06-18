@@ -1,0 +1,32 @@
+#author:sahitya varma
+#this script traverse through your syslog directory and truncate files
+
+#/bin/bash
+
+#Getting the yesterday and today logs.
+
+today_date=$(date '+%d')
+today_month=$(date '+%m')
+today_log_file="$today_month""$today_date"".log"
+#echo "$today_log_file"
+
+yesterday_date=$(date -d "yesterday" '+%d')
+yesterday_month=$(date -d "yesterday" '+%m')
+yesterday_log_file="$yesterday_month""$yesterday_date"".log"
+#echo yesterday log file "$yesterday_log_file"
+
+#traverse through files and cut the files to today's 1000 lines
+
+for dir in /var/log/syslog-ng/DC/*/; do
+    if [ -d "$dir" ]; then
+        cd $dir
+        current_directory=$(pwd)
+       #echo $current_directory
+        cd $current_directory
+        touch temp.log
+       #ls
+        tail -10 $today_log_file > temp.log
+        mv temp.log  $today_log_file
+    fi
+done
+
